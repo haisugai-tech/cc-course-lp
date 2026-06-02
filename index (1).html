@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Claude Code講座 — プログラム未経験から、自分専用の自動売買ソフトを作る</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg: #FAF8F3;
+  --bg-deeper: #F2EDE0;
+  --bg-card: #FFFFFF;
+  --ink: #1A1F2E;
+  --ink-soft: #2E3340;
+  --ink-mute: #6B6862;
+  --line: #D9D1BC;
+  --line-soft: #E8E2D0;
+  --accent: #1E3A5F;
+  --accent-deep: #142845;
+  --brass: #B89968;
+  --brass-deep: #8B7142;
+  --warn: #C7553D;
+  --highlight: #F5EFE0;
+  --shadow: 0 1px 2px rgba(26,31,46,.04), 0 8px 24px rgba(26,31,46,.06);
+  --shadow-strong: 0 2px 4px rgba(26,31,46,.05), 0 20px 60px rgba(26,31,46,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans JP', sans-serif;
+  font-weight:400;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.85;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings: "palt";
+  overflow-x:hidden;
+}
+.serif{font-family:'Shippori Mincho', serif;}
+.serif-en{font-family:'Fraunces', serif; font-variation-settings:"SOFT" 30, "WONK" 0;}
+.mono{font-family:'JetBrains Mono', monospace; letter-spacing:.05em;}
+
+.container{max-width:1100px; margin:0 auto; padding: 0 24px;}
+.narrow{max-width:780px; margin:0 auto; padding: 0 24px;}
+
+/* ============ HEADER ============ */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:18px 32px;
+  display:flex;justify-content:space-between;align-items:center;
+  backdrop-filter: blur(12px);
+  background: rgba(250,248,243,.7);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s, background .3s;
+}
+.header.scrolled{border-bottom-color: var(--line-soft);}
+.brand{font-family:'Fraunces',serif; font-weight:600; letter-spacing:.02em; font-size:18px; color:var(--ink);}
+.brand .dot{color:var(--brass); font-family:'Fraunces',serif;}
+.nav-cta{
+  font-size:13px; font-weight:500;
+  padding:9px 20px;
+  background:var(--ink); color:var(--bg);
+  border-radius:2px;
+  text-decoration:none;
+  transition: background .2s;
+}
+.nav-cta:hover{background:var(--accent);}
+
+/* ============ HERO ============ */
+.hero{
+  min-height: 100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding: 140px 0 100px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;
+  top:0;right:-20%;width:60%;height:60%;
+  background: radial-gradient(circle at center, rgba(184,153,104,.08) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero::after{
+  content:"";position:absolute;
+  bottom:-10%;left:-10%;width:50%;height:50%;
+  background: radial-gradient(circle at center, rgba(30,58,95,.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+  color:var(--brass-deep);
+  margin-bottom:32px;
+  opacity:0; animation: fadeUp .8s .2s forwards;
+}
+.hero-eyebrow .line{
+  display:inline-block;width:40px;height:1px;background:var(--brass);
+  vertical-align:middle;margin-right:14px;
+}
+.hero-title{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size: clamp(32px, 5.4vw, 62px);
+  line-height: 1.35;
+  letter-spacing: .02em;
+  color:var(--ink);
+  margin-bottom:36px;
+}
+.hero-title .em{color:var(--accent); font-weight:700; white-space:nowrap;}
+.hero-title .row{display:block; opacity:0;}
+.hero-title .row:nth-child(1){animation: fadeUp .9s .4s forwards;}
+.hero-title .row:nth-child(2){animation: fadeUp .9s .6s forwards;}
+.hero-title .row:nth-child(3){animation: fadeUp .9s .8s forwards;}
+.hero-sub{
+  font-size:17px;
+  line-height:2;
+  color:var(--ink-soft);
+  max-width:640px;
+  margin-bottom:48px;
+  opacity:0; animation: fadeUp .9s 1.1s forwards;
+}
+.hero-bullets{
+  list-style:none;
+  display:flex;flex-direction:column;gap:12px;
+  margin-bottom:56px;
+  opacity:0; animation: fadeUp .9s 1.3s forwards;
+}
+.hero-bullets li{
+  padding-left:24px; position:relative;
+  font-size:15px; color:var(--ink-soft);
+}
+.hero-bullets li::before{
+  content:""; position:absolute; left:0; top:14px;
+  width:12px; height:1px; background:var(--brass);
+}
+.hero-scroll{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.25em;
+  color:var(--ink-mute);
+  opacity:0; animation: fadeUp .9s 1.6s forwards;
+}
+.hero-scroll .arrow{display:inline-block; margin-left:8px; animation: bounce 2s infinite;}
+
+@keyframes fadeUp{
+  from{opacity:0; transform: translateY(20px);}
+  to{opacity:1; transform: translateY(0);}
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(4px);}
+}
+
+/* ============ SECTION COMMON ============ */
+section{padding: 120px 0; position:relative;}
+.section-num{
+  font-family:'Fraunces', serif;
+  font-size:13px; letter-spacing:.2em;
+  color:var(--brass-deep);
+  margin-bottom:18px;
+  font-weight:500;
+}
+.section-title{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size: clamp(26px, 3.6vw, 40px);
+  line-height:1.5;
+  margin-bottom: 48px;
+  color:var(--ink);
+}
+.section-title .em{color:var(--accent);}
+.section-lead{
+  font-size:17px; line-height:2;
+  color:var(--ink-soft);
+  margin-bottom:32px;
+}
+
+/* fade reveal */
+.reveal{opacity:0; transform:translateY(24px); transition: opacity .8s ease, transform .8s ease;}
+.reveal.in{opacity:1; transform:translateY(0);}
+
+/* ============ EMPATHY ============ */
+.empathy{
+  background: var(--bg-deeper);
+  position:relative;
+}
+.empathy::before{
+  content:""; position:absolute; top:0; left:50%;
+  width:1px; height:60px; background:var(--brass);
+  transform: translateX(-50%);
+}
+.empathy-block{
+  font-size:16px; line-height:2.1; color:var(--ink-soft);
+  margin-bottom:40px;
+}
+.empathy-block p{margin-bottom:24px;}
+.empathy-divider{
+  width:60px; height:1px; background:var(--brass);
+  margin: 56px auto;
+}
+.empathy-q{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:clamp(22px, 2.6vw, 30px);
+  line-height:1.7;
+  color:var(--ink);
+  margin-bottom:32px;
+}
+.empathy-q .em{color:var(--accent);}
+
+.turn{
+  margin-top:80px;
+  padding: 56px 48px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--brass);
+  box-shadow: var(--shadow);
+}
+.turn-label{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+  color:var(--brass-deep); margin-bottom:16px;
+}
+.turn-title{
+  font-family:'Shippori Mincho', serif;
+  font-weight:700;
+  font-size:clamp(22px, 2.6vw, 30px);
+  line-height:1.6;
+  margin-bottom:24px;
+  color:var(--ink);
+}
+.turn-body{
+  font-size:16px; line-height:2; color:var(--ink-soft);
+}
+.turn-body p{margin-bottom:20px;}
+.turn-body p:last-child{margin-bottom:0;}
+
+/* ============ SOLUTION ============ */
+.solution-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:48px;
+  margin-top:64px;
+}
+@media(max-width:780px){.solution-grid{grid-template-columns:1fr; gap:32px;}}
+.solution-card{
+  padding: 40px 36px;
+  background: var(--bg-card);
+  border:1px solid var(--line-soft);
+  position:relative;
+}
+.solution-card .num{
+  font-family:'Fraunces', serif;
+  font-weight:300;
+  font-size:64px;
+  line-height:1;
+  color:var(--brass);
+  margin-bottom:24px;
+  display:block;
+}
+.solution-card h4{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:20px;
+  line-height:1.6;
+  margin-bottom:16px;
+  color:var(--ink);
+}
+.solution-card p{
+  font-size:15px; line-height:1.95; color:var(--ink-soft);
+}
+
+/* ============ PROOF (instructor) ============ */
+.proof{
+  background: var(--accent);
+  color: var(--bg);
+}
+.proof .section-num{color:var(--brass);}
+.proof .section-title{color:var(--bg);}
+.proof .section-title .em{color:var(--brass);}
+.proof-body{
+  font-size:16px; line-height:2.1;
+  color: rgba(250,248,243,.88);
+}
+.proof-body p{margin-bottom:24px;}
+.proof-body .em{color:var(--brass); font-weight:500;}
+.proof-pull{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:clamp(22px, 2.6vw, 28px);
+  line-height:1.7;
+  color: var(--brass);
+  margin: 48px 0;
+  padding: 32px 0;
+  border-top:1px solid rgba(184,153,104,.3);
+  border-bottom:1px solid rgba(184,153,104,.3);
+  text-align:center;
+}
+.proof-promise{
+  margin-top:64px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+}
+@media(max-width:780px){.proof-promise{grid-template-columns:1fr;}}
+.promise-card{
+  padding: 32px;
+  border:1px solid rgba(250,248,243,.18);
+  background: rgba(20,40,69,.4);
+}
+.promise-card .label{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+  margin-bottom:18px;
+}
+.promise-card .label.yes{color:var(--brass);}
+.promise-card .label.no{color:#E89B8A;}
+.promise-card p{
+  font-size:15px; line-height:1.9;
+  color: rgba(250,248,243,.88);
+}
+
+/* ============ CURRICULUM ============ */
+.curriculum{padding-top:120px;}
+.chapters{
+  display:flex;flex-direction:column;
+  border-top:1px solid var(--line);
+}
+.chapter{
+  display:grid;
+  grid-template-columns: 80px 1fr;
+  gap:32px;
+  padding: 32px 0;
+  border-bottom:1px solid var(--line);
+  align-items:start;
+  transition: background .3s;
+}
+.chapter:hover{background: var(--highlight);}
+.chapter .num{
+  font-family:'Fraunces', serif;
+  font-weight:300;
+  font-size:36px;
+  color:var(--brass);
+  line-height:1;
+}
+.chapter h4{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:19px;
+  line-height:1.6;
+  color:var(--ink);
+  margin-bottom:8px;
+}
+.chapter p{
+  font-size:14px; line-height:1.85; color:var(--ink-mute);
+}
+
+/* ============ FUTURE (受講後の姿) ============ */
+.future{
+  background: var(--bg-deeper);
+}
+.future-list{
+  list-style:none;
+  margin-bottom:56px;
+}
+.future-list li{
+  padding: 16px 0 16px 40px;
+  position:relative;
+  font-size:16px;
+  line-height:1.8;
+  color:var(--ink-soft);
+  border-bottom:1px solid var(--line-soft);
+}
+.future-list li::before{
+  content:"✓";
+  position:absolute;
+  left:0; top:18px;
+  color:var(--brass);
+  font-family:'Fraunces', serif;
+  font-weight:500;
+  font-size:18px;
+}
+.future-scene{
+  margin-top:64px;
+  padding: 56px 48px;
+  background: var(--bg-card);
+  border:1px solid var(--line-soft);
+  font-family:'Shippori Mincho', serif;
+  font-size:17px;
+  line-height:2.2;
+  color:var(--ink-soft);
+  font-weight:500;
+}
+.future-scene p{margin-bottom:20px;}
+.future-scene .closing{
+  display:block; margin-top:32px;
+  color:var(--accent);
+  font-weight:700;
+  font-size:18px;
+}
+
+/* ============ PRICING ============ */
+.pricing-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+  margin-top:48px;
+}
+@media(max-width:880px){.pricing-grid{grid-template-columns:1fr;}}
+.plan{
+  padding: 48px 40px;
+  background:var(--bg-card);
+  border:1px solid var(--line-soft);
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.plan.premium{
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+.plan-tag{
+  position:absolute;
+  top:-12px; left:32px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.2em;
+  background:var(--brass); color:var(--bg);
+  padding:6px 14px;
+}
+.plan-name{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:26px;
+  margin-bottom:8px;
+}
+.plan-sub{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ink-mute);
+  margin-bottom:32px;
+}
+.plan.premium .plan-sub{color: rgba(250,248,243,.55);}
+.plan-price-row{display:flex; align-items:baseline; gap:16px; margin-bottom:8px; flex-wrap:wrap;}
+.plan-price{
+  font-family:'Fraunces', serif;
+  font-weight:400;
+  font-size:48px;
+  line-height:1;
+  color:var(--accent);
+}
+.plan.premium .plan-price{color:var(--brass);}
+.plan-price-strike{
+  font-family:'Fraunces', serif;
+  font-size:20px;
+  color:var(--ink-mute);
+  text-decoration:line-through;
+}
+.plan.premium .plan-price-strike{color:rgba(250,248,243,.4);}
+.plan-price-note{
+  font-size:12px; color:var(--ink-mute);
+  margin-bottom:28px;
+}
+.plan.premium .plan-price-note{color:rgba(250,248,243,.55);}
+.plan-features{
+  list-style:none;
+  flex:1;
+  margin-bottom:32px;
+}
+.plan-features li{
+  padding: 12px 0 12px 26px;
+  position:relative;
+  font-size:14.5px;
+  line-height:1.7;
+  border-bottom:1px solid var(--line-soft);
+}
+.plan.premium .plan-features li{border-bottom-color:rgba(250,248,243,.12);}
+.plan-features li::before{
+  content:"";
+  position:absolute;
+  left:0; top:20px;
+  width:14px; height:1px;
+  background:var(--brass);
+}
+.plan-cta{
+  display:inline-block; text-align:center;
+  padding: 16px 32px;
+  text-decoration:none;
+  font-size:14px; font-weight:500;
+  letter-spacing:.05em;
+  transition: all .2s;
+}
+.plan-cta.primary{background:var(--accent); color:var(--bg);}
+.plan-cta.primary:hover{background:var(--accent-deep);}
+.plan-cta.gold{background:var(--brass); color:var(--ink);}
+.plan-cta.gold:hover{background:var(--brass-deep); color:var(--bg);}
+
+.upgrade-note{
+  margin-top:32px;
+  padding: 24px 28px;
+  background: var(--bg-card);
+  border:1px dashed var(--line);
+  font-size:14px;
+  line-height:1.85;
+  color:var(--ink-soft);
+}
+.upgrade-note strong{color:var(--accent); font-weight:600;}
+
+.monitor-callout{
+  margin-top:40px;
+  padding: 36px 40px;
+  background: var(--highlight);
+  border-left:3px solid var(--brass);
+}
+.monitor-callout h5{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:18px;
+  margin-bottom:16px;
+  color:var(--ink);
+}
+.monitor-callout p{
+  font-size:14.5px; line-height:1.95; color:var(--ink-soft);
+  margin-bottom:12px;
+}
+.monitor-callout p:last-child{margin-bottom:0;}
+.monitor-callout ul{
+  list-style:none;
+  margin: 12px 0 20px;
+}
+.monitor-callout ul li{
+  padding: 6px 0 6px 20px;
+  position:relative;
+  font-size:14.5px;
+  line-height:1.85;
+  color:var(--ink-soft);
+}
+.monitor-callout ul li::before{
+  content:""; position:absolute; left:0; top:18px;
+  width:10px; height:1px; background:var(--brass);
+}
+
+/* ============ FLOW ============ */
+.flow-tabs{
+  display:flex;
+  gap:0;
+  margin-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.flow-tab{
+  flex:1;
+  padding: 16px 12px;
+  text-align:center;
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--ink-mute);
+  cursor:pointer;
+  background:transparent;
+  border:none;
+  border-bottom:2px solid transparent;
+  transition: all .2s;
+}
+.flow-tab.active{
+  color:var(--accent);
+  border-bottom-color:var(--brass);
+}
+.flow-content{display:none;}
+.flow-content.active{display:block;}
+.flow-steps{
+  margin-top:32px;
+  display:flex;flex-direction:column;
+}
+.flow-step{
+  display:grid;
+  grid-template-columns:64px 1fr;
+  gap:32px;
+  padding: 28px 0;
+  border-bottom:1px solid var(--line);
+  align-items:start;
+}
+.flow-step .step-num{
+  font-family:'Fraunces', serif;
+  font-weight:300;
+  font-size:32px;
+  color:var(--brass);
+  line-height:1;
+}
+.flow-step h5{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:17px;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.flow-step p{
+  font-size:14px; line-height:1.85; color:var(--ink-mute);
+}
+.flow-cta{text-align:center; margin-top:56px;}
+.flow-cta-button{
+  display:inline-block;
+  padding: 18px 48px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size:15px; font-weight:600; letter-spacing:.05em;
+  text-decoration:none;
+  transition: all .2s;
+}
+.flow-cta-button:hover{background:var(--accent-deep);}
+.flow-cta-note{
+  margin-top:16px;
+  font-size:13px;
+  color:var(--ink-mute);
+}
+
+/* ============ FINAL CTA ============ */
+.final-cta{
+  background:var(--ink);
+  color:var(--bg);
+  text-align:center;
+}
+.final-cta .section-title{color:var(--bg);}
+.final-cta .section-title .em{color:var(--brass);}
+.final-cta p{
+  font-size:16px; line-height:2;
+  color: rgba(250,248,243,.78);
+  max-width:600px; margin:0 auto 40px;
+}
+.cta-button{
+  display:inline-block;
+  padding: 20px 56px;
+  background: var(--brass);
+  color: var(--ink);
+  font-size:15px; font-weight:600; letter-spacing:.08em;
+  text-decoration:none;
+  transition: all .2s;
+}
+.cta-button:hover{background:var(--bg); color:var(--accent);}
+
+/* ============ DISCLAIMER ============ */
+.disclaimer{
+  background: var(--bg-deeper);
+  padding: 80px 0;
+}
+.disclaimer-box{
+  border:1px solid var(--line);
+  padding: 40px;
+  background: var(--bg-card);
+}
+.disclaimer h5{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+  color:var(--ink-mute);
+  margin-bottom:20px;
+}
+.disclaimer p{
+  font-size:13.5px; line-height:1.9;
+  color:var(--ink-mute);
+  margin-bottom:16px;
+}
+.disclaimer p:last-child{margin-bottom:0;}
+
+/* ============ FOOTER ============ */
+.footer{
+  padding: 56px 0 80px;
+  text-align:center;
+  border-top:1px solid var(--line-soft);
+}
+.footer-brand{
+  font-family:'Fraunces', serif;
+  font-weight:500;
+  font-size:18px;
+  color:var(--ink);
+  margin-bottom:12px;
+}
+.footer p{
+  font-size:12px; color:var(--ink-mute);
+  margin-bottom:6px;
+}
+.footer .signature{
+  margin-top:32px;
+  font-family:'Shippori Mincho', serif;
+  font-style:italic;
+  font-size:13px;
+  color:var(--brass-deep);
+}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:600px){
+  section{padding:80px 0;}
+  .hero{padding:120px 0 80px;}
+  .turn{padding:36px 28px;}
+  .solution-card{padding:32px 24px;}
+  .future-scene{padding:36px 28px;}
+  .plan{padding:36px 28px;}
+  .chapter{grid-template-columns:60px 1fr; gap:20px;}
+  .flow-step{grid-template-columns:48px 1fr; gap:20px;}
+  .header{padding:14px 20px;}
+  .monitor-callout{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="header">
+  <div class="brand">ina<span class="dot">500</span></div>
+  <a href="#pricing" class="nav-cta">受講を検討する</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow"><span class="line"></span>Claude Code 講座 ／ プログラム未経験者のための</div>
+    <h1 class="hero-title">
+      <span class="row">プログラム未経験。</span>
+      <span class="row">投資で負け続けてきた僕が、</span>
+      <span class="row">AIと二人三脚で作った<span class="em">自動売買ソフト。</span></span>
+    </h1>
+    <p class="hero-sub">
+      作り方を全部、お見せします。
+    </p>
+    <ul class="hero-bullets">
+      <li>プログラミング未経験でもOK。タイピングができて、ファイルの保存やコピペができれば大丈夫です。</li>
+      <li>米国株を対象にした、僕が実際に運用しているソフトをそのまま教材に。</li>
+      <li>Claude Codeの使い方を学べば、自動売買以外のソフトも作れるようになります。</li>
+    </ul>
+    <div class="hero-scroll">SCROLL <span class="arrow">↓</span></div>
+  </div>
+</section>
+
+<!-- EMPATHY -->
+<section class="empathy">
+  <div class="narrow">
+    <div class="reveal">
+      <div class="section-num">01 ／ 共感</div>
+      <h2 class="section-title">こんな経験、ありませんか？</h2>
+    </div>
+
+    <div class="empathy-block reveal">
+      <p>「下がったら損切りしよう」と決めていたのに、その瞬間が来ると指が止まる。「もう少し戻るかも」と祈っているうちに、気づけば塩漬けの含み損。</p>
+      <p>ようやく含み益が出たかと思えば、「早く確定したい」という焦りで売ってしまい、その後さらに上がっていく株価を見て、また後悔する。</p>
+      <p>チャートを一日中眺めるのも、いい加減辛い。仕事中もスマホが気になる。寝る前にも気になる。気が休まる時間がない。</p>
+      <p>SNSやYouTubeで「この銘柄が来る」と紹介されれば飛びついてみるが、結局そこから下がる。「自分で考えても勝てないし、人の言うことを聞いても勝てない」――そんな投資疲れを抱えていませんか？</p>
+    </div>
+
+    <div class="empathy-divider reveal"></div>
+
+    <div class="reveal">
+      <p class="empathy-q">「自動売買ソフトに<span class="em">任せられたら</span>」と<br />思ったことは、ありませんか？</p>
+      <div class="empathy-block">
+        <p>感情を排除して、ルール通りに機械的に売買してくれるソフトがあれば。</p>
+        <p>でも、既製の自動売買ツールはどれも中身がブラックボックス。「本当にロジック通りに動いているのか」「そもそも詐欺じゃないのか」――不安が拭えない。月額数万円を払い続けるのも気が進まない。</p>
+        <p>「じゃあ自分で作ればいい」とは思うものの、プログラミングなんて触ったこともない。HTMLとPythonの違いもよくわからない。「自分には無理」と諦めてきたのではないでしょうか。</p>
+      </div>
+    </div>
+
+    <div class="turn reveal">
+      <div class="turn-label">━━ But —</div>
+      <h3 class="turn-title">でも、時代は変わりました。</h3>
+      <div class="turn-body">
+        <p>Claude Codeを使えば、コピペとAIへの指示だけで、本格的なソフトが作れるようになりました。プログラミング未経験でも、自分のロジックで動く、自分専用の自動売買ソフトを持てる時代です。</p>
+        <p>「中身が全部わかっている」「自分で改造できる」「月額料金もかからない」――そんなソフトを、自分の手で作る選択肢が、ようやく現実のものになりました。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section>
+  <div class="container">
+    <div class="narrow reveal" style="padding-left:0;padding-right:0;">
+      <div class="section-num">02 ／ 解決策</div>
+      <h2 class="section-title">解決策は、AI技術の進化が<br />連れてきました。</h2>
+      <p class="section-lead">名前を「<strong>Claude Code</strong>」と言います。</p>
+      <p class="section-lead">
+        ChatGPTのように「質問に答えてくれるAI」とは違って、Claude Codeは「<strong>あなたの代わりに手を動かしてくれるAI</strong>」です。
+      </p>
+      <p class="section-lead">
+        PCの中に住み込んで、ファイルを作り、コードを書き、実際に動かし、エラーが出れば自分で直す。私たちは日本語で「こういうものが作りたい」と伝えるだけ。あとはClaude Codeが、職人のように黙々と手を動かしてくれます。
+      </p>
+      <p class="section-lead">
+        プログラミングの専門知識は要りません。<strong>コピペとAIへの指示だけで、本格的なソフトが作れる時代が、本当に来ました。</strong>
+      </p>
+    </div>
+
+    <div class="solution-grid">
+      <div class="solution-card reveal">
+        <span class="num">01</span>
+        <h4>中身が全部わかる</h4>
+        <p>自分で作ったソフトなので、ブラックボックスの不安はゼロ。どんなロジックで動いているか、すべて把握できています。</p>
+      </div>
+      <div class="solution-card reveal">
+        <span class="num">02</span>
+        <h4>月額料金は不要</h4>
+        <p>最小構成なら、自宅のPCを使ってほぼ無料で運用することも可能。月数万円のサブスクから卒業できます。</p>
+      </div>
+      <div class="solution-card reveal">
+        <span class="num">03</span>
+        <h4>いつでも改造できる</h4>
+        <p>「ここを変えたい」と思ったときに、Claude Codeに命令するだけ。自分の判断で進化させ続けられます。</p>
+      </div>
+      <div class="solution-card reveal">
+        <span class="num">04</span>
+        <h4>応用が効く</h4>
+        <p>自動売買だけではありません。一度Claude Codeの使い方が体に入れば、家計簿アプリでも何でも、思いついたものを形にできます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="proof">
+  <div class="narrow">
+    <div class="reveal">
+      <div class="section-num">03 ／ 講師</div>
+      <h2 class="section-title">僕自身が、<br />その<span class="em">証明</span>です。</h2>
+    </div>
+
+    <div class="proof-body reveal">
+      <p>僕はプログラミングを学校で習ったこともなければ、独学したこともありません。完全な未経験者でした。</p>
+      <p>Claude Codeに出会って、最初に試しに作ってみたのは、SNSに自動投稿するボットでした。コピペとAIへの指示だけで、想像していたものが実際に動くソフトとして手に入った瞬間――あの感動は今でも忘れられません。</p>
+      <p>「これなら、長年憧れていた自動売買ソフトも作れるんじゃないか」――そう確信して、本格的な開発に取り組みました。</p>
+      <p>試行錯誤の末に完成したのが、米国株を対象にした自動売買ソフトです。相場の異常を検知して取引を止める機能、AIにニュースを読ませて怪しい銘柄を自動的に除外する機能、それらを全部備えた、本格的なシステム。クラウドサーバー上で、<span class="em">24時間365日、自動で動き続けています</span>。</p>
+    </div>
+
+    <div class="proof-pull reveal">
+      未経験者がここまで作れるなら、<br />
+      同じくらいの初心者にも、絶対に作れる。
+    </div>
+
+    <div class="proof-body reveal">
+      <p><strong style="color:var(--brass);">いなちゃん</strong>　複数の事業を経営する好奇心旺盛なシリアルアントレプレナー。本業の傍らで、米国株の個人投資家としても20年以上の経験を持つ。</p>
+      <p>投資人生は、正直に言って失敗の連続でした。FXで大きく資金を失い、複数の自動売買ツールや投資商品に手を出しては期待した結果が出ず、合計で数億円の損失を出してきました。</p>
+      <p>振り返って気づいたのは、シンプルな事実でした。<span class="em">「自分の感情こそが、最大の敵だった」</span>。</p>
+      <p>既製品の自動売買ツールも、結局は他人の作ったブラックボックス。「だったら、自分で作れば絶対に詐欺ではない」と思い始めたのが、転機でした。</p>
+      <p>ChatGPT、Gemini、Claudeと触れていくうちに、AIの実力が桁違いに上がっていることを肌で感じました。中でもClaude Codeに出会ったとき、直感的に「これなら作れる」と確信しました。</p>
+      <p>ひとつ作れるようになると、世界が変わる。今は、想像したものはほぼ何でも作れます。</p>
+    </div>
+
+    <div class="proof-promise">
+      <div class="promise-card reveal">
+        <div class="label yes">━━ 約束できること</div>
+        <p>Claude Codeを使えば、コピペができる人なら誰でも、自分専用の自動売買ソフトを作れるようになります。</p>
+      </div>
+      <div class="promise-card reveal">
+        <div class="label no">━━ 約束しないこと</div>
+        <p>儲かる保証はしません。リターンも保証しません。本講座は、Claude Codeの使い方を学ぶための教育講座です。最終的な運用判断は、すべて受講者自身の責任で行っていただきます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM -->
+<section class="curriculum">
+  <div class="container">
+    <div class="narrow reveal" style="padding-left:0;padding-right:0;">
+      <div class="section-num">04 ／ カリキュラム</div>
+      <h2 class="section-title">全7章で、ゼロから本番運用まで。</h2>
+      <p class="section-lead">画面録画と音声ナレーションでお届けする動画教材。自分のペースで、いつでも見返せます。</p>
+    </div>
+
+    <div class="narrow chapters reveal" style="padding-left:0;padding-right:0;">
+      <div class="chapter">
+        <div class="num">01</div>
+        <div>
+          <h4>必要な課金とコストの全体像</h4>
+          <p>始める前に知っておくべき投資金額、月額コスト、各サービスの料金体系を整理します。</p>
+        </div>
+      </div>
+      <div class="chapter">
+        <div class="num">02</div>
+        <div>
+          <h4>環境構築 ── 5つのツールに登録する</h4>
+          <p>Claude Max、Claude Code、Anthropic API、Alpaca、DigitalOcean。すべての登録と初期設定を、画面で見せながら解説します。</p>
+        </div>
+      </div>
+      <div class="chapter">
+        <div class="num">03</div>
+        <div>
+          <h4>ソフトの土台を作って、動かしてみる</h4>
+          <p>ソフト全体の設計図を引き、Claude Codeで土台を作り、実際の発注はせずに動作確認まで。「動くものがある」状態を体験します。</p>
+        </div>
+      </div>
+      <div class="chapter">
+        <div class="num">04</div>
+        <div>
+          <h4>過去5年のデータで戦略を試してみる</h4>
+          <p>Alpacaの実データを使ったバックテストで、戦略が本当に機能するかを検証する方法を学びます。</p>
+        </div>
+      </div>
+      <div class="chapter">
+        <div class="num">05</div>
+        <div>
+          <h4>パラメータを実験する</h4>
+          <p>エントリー閾値・利確・損切などを変えながら、自分の手で「効くパラメータ」を見つけ出す体験。</p>
+        </div>
+      </div>
+      <div class="chapter">
+        <div class="num">06</div>
+        <div>
+          <h4>判断層 ── 相場フィルターとAIニュース分析</h4>
+          <p>相場の異常を検知して取引を止める仕組み、AIにニュースを読ませて怪しい銘柄を除外する仕組みを実装します。</p>
+        </div>
+      </div>
+      <div class="chapter">
+        <div class="num">07</div>
+        <div>
+          <h4>本番稼働 ── 24時間自動で動かす</h4>
+          <p>クラウドサーバーにソフトを置き、24時間365日、自動で動き続ける状態を作ります。万が一止まっても自動で再起動する仕組みも組み込み、翌日のログ確認までお見せします。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUTURE -->
+<section class="future">
+  <div class="narrow">
+    <div class="reveal">
+      <div class="section-num">05 ／ 受講後の姿</div>
+      <h2 class="section-title">受講後、あなたは<br />こうなっています。</h2>
+    </div>
+
+    <ul class="future-list reveal">
+      <li>自分専用の自動売買ソフトを持っている</li>
+      <li>Claude Codeを使いこなせる</li>
+      <li>「投資疲れ」から解放されている</li>
+      <li>「ここを変えたい」が、自分でできる</li>
+      <li>自動売買以外のソフトも作れるようになっている</li>
+      <li>「自分で作れる」という自信を手に入れている</li>
+    </ul>
+
+    <div class="future-scene reveal">
+      <p>朝、コーヒーを淹れながらPCを開く。昨日の取引結果が、自分の作ったソフトから自動で記録されている。「今日はあの銘柄が動きそうだな」とニュースを見ながらも、もう焦って売買ボタンを押す必要はない。</p>
+      <p>判断はソフトがやってくれる。自分は、自分のやるべき仕事に向かう。</p>
+      <p>昼休みにふと「そういえば、家計簿アプリも自分で作れるんじゃないか」と思いつく。Claude Codeに指示を出してみる。1時間後には、試作品が動いている。</p>
+      <span class="closing">――こんな日常が、3ヶ月後のあなたの姿です。</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="narrow reveal" style="padding-left:0;padding-right:0;">
+      <div class="section-num">06 ／ 価格</div>
+      <h2 class="section-title">2つのコースから、<br />お選びいただけます。</h2>
+      <p class="section-lead">第1期は<strong>モニター価格</strong>での募集です。標準コース5名、プレミアムコース5名の限定枠。</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- 標準 -->
+      <div class="plan reveal">
+        <div class="plan-tag">標準コース</div>
+        <div class="plan-name">Standard</div>
+        <div class="plan-sub">Self-paced ／ 5 seats</div>
+        <div class="plan-price-row">
+          <span class="plan-price">¥250,000</span>
+          <span class="plan-price-strike">¥300,000</span>
+        </div>
+        <div class="plan-price-note">第1期モニター価格（税込）／ 第2期以降は通常価格</div>
+        <ul class="plan-features">
+          <li>動画教材 全7章（画面録画＋音声ナレーション）</li>
+          <li>ソフト構築用のプロンプト集（Claude Codeにコピペして使うテンプレート）</li>
+          <li>動作確認済みの完成版コード（つまずいた時のリカバリ用）</li>
+          <li>受講者専用LINEオープンチャット（受講者同士の交流場・運営継続のかぎり利用可）</li>
+        </ul>
+        <a href="#flow" class="plan-cta primary">標準コースに申し込む</a>
+      </div>
+
+      <!-- プレミアム -->
+      <div class="plan premium reveal">
+        <div class="plan-tag">プレミアムコース</div>
+        <div class="plan-name">Premium</div>
+        <div class="plan-sub">With direct access ／ 5 seats</div>
+        <div class="plan-price-row">
+          <span class="plan-price">¥2,000,000</span>
+          <span class="plan-price-strike">¥3,000,000</span>
+        </div>
+        <div class="plan-price-note">第1期モニター価格（税込）／ 個別契約・銀行振込</div>
+        <ul class="plan-features">
+          <li>標準コースの全コンテンツ</li>
+          <li>講師が実運用中のソフトの完成版コード（フィルター・AIニュース分析を含む全コード）</li>
+          <li>AIニュース分析プロンプトの全文公開</li>
+          <li>パラメータ最適化の根拠（バックテスト結果込み）</li>
+          <li>失敗事例カタログ（採用しなかった戦略の詳細解説）</li>
+          <li>講師との1対1チャットサポート（1ヶ月）</li>
+        </ul>
+        <a href="#flow" class="plan-cta gold">プレミアムに申し込む</a>
+      </div>
+    </div>
+
+    <div class="upgrade-note reveal">
+      <strong>━━ アップグレードについて</strong><br />
+      標準コース受講開始から3ヶ月以内であれば、プレミアムコースへのアップグレードが可能です（追加 ¥1,900,000、税込）。「まず標準で試してみたい」という方も、後からプレミアムへ移行できます。
+    </div>
+
+    <div class="monitor-callout reveal">
+      <h5>第1期モニター価格について</h5>
+      <p>モニター価格は、以下にご協力いただける方が対象です。</p>
+      <ul>
+        <li>受講後の感想文（A4 1ページ程度）</li>
+        <li>LP掲載用のお写真（<strong>目元のモザイクや加工は可</strong>）</li>
+        <li>プレミアムコースは、これに加えてインタビュー協力</li>
+      </ul>
+      <p>上記へのご協力が難しい場合は、通常価格（標準 ¥300,000／プレミアム ¥3,000,000）でのご案内となります。</p>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section id="flow">
+  <div class="narrow">
+    <div class="reveal">
+      <div class="section-num">07 ／ 申込みの流れ</div>
+      <h2 class="section-title">お申込みから受講開始まで。</h2>
+    </div>
+
+    <div class="reveal">
+      <div class="flow-tabs">
+        <button class="flow-tab active" data-tab="standard">標準コース</button>
+        <button class="flow-tab" data-tab="premium">プレミアムコース</button>
+      </div>
+
+      <!-- 標準フロー -->
+      <div class="flow-content active" id="flow-standard">
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">01</div>
+            <div>
+              <h5>お問い合わせフォームから送信</h5>
+              <p>標準コースを希望される旨と、簡単な自己紹介をお送りください。</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">02</div>
+            <div>
+              <h5>折り返しのご案内</h5>
+              <p>講座内容・モニター条件・お支払い方法について、メールでご案内いたします。</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">03</div>
+            <div>
+              <h5>Stripeでクレジット決済</h5>
+              <p>ご案内のURLからカード決済をお済ませください。</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">04</div>
+            <div>
+              <h5>受講開始</h5>
+              <p>動画教材へのアクセス権と、プロンプト集・完成版コードをお渡しします。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- プレミアムフロー -->
+      <div class="flow-content" id="flow-premium">
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">01</div>
+            <div>
+              <h5>お問い合わせフォームから送信</h5>
+              <p>プレミアムコースを希望される旨と、簡単な自己紹介をお送りください。</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">02</div>
+            <div>
+              <h5>折り返しのご案内</h5>
+              <p>講座内容・モニター条件・お支払い方法について、メールでご案内いたします。<strong style="color:var(--accent);">ご希望があれば、事前のオンライン面談（30分）も可能です。</strong></p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">03</div>
+            <div>
+              <h5>契約書取り交わし・銀行振込</h5>
+              <p>契約書を双方で取り交わした上で、銀行振込にてお支払いください。</p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">04</div>
+            <div>
+              <h5>受講開始</h5>
+              <p>動画教材、完成版コード、AIニュース分析プロンプト、失敗事例カタログ、すべてをお渡しします。1対1チャットサポートも開始です。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-cta">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfvtbbRLhF1hiYa6Op1Mq7PtWukFfTlmmpFMajYjxpNhQ-BVA/viewform" target="_blank" rel="noopener" class="flow-cta-button">お問い合わせ・お申し込みフォームへ</a>
+        <p class="flow-cta-note">いただいたお問い合わせには、3営業日以内にご返信いたします。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="narrow">
+    <div class="reveal">
+      <h2 class="section-title">ここまで読んでくださった<br />あなたへ。</h2>
+      <p>「自分には無理」と諦めていたソフトウェア開発が、AIの進化によって、本当に手の届く場所まで来ました。プログラム未経験の僕にできたのですから、同じ憧れを持つあなたにも、絶対に作れます。</p>
+      <p>第1期モニター枠は、各コース5名ずつの限定です。</p>
+      <a href="#pricing" class="cta-button">受講を検討する</a>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<section class="disclaimer">
+  <div class="narrow">
+    <div class="disclaimer-box reveal">
+      <h5>━━ 重要事項</h5>
+      <p>本講座はClaude Codeを使ったソフトウェア開発を学ぶための教育講座であり、投資助言・運用代行・金融商品の販売を行うものではありません。</p>
+      <p>講座内で紹介されるパラメータ、戦略、コードは、すべて教材としてのサンプルです。「最適値」や「推奨値」ではなく、教育目的の例示としてご理解ください。</p>
+      <p>本講座で学んだ内容を活用した投資・運用の結果について、講師および運営は一切の責任を負いません。最終的な運用判断は、受講者ご自身の責任において行ってください。</p>
+      <p>受講料の返金は原則として承っておりません。お申込み前に、本講座があなたの目的に合致するかを、お問い合わせ等でしっかりとご確認ください。</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-brand">ina<span style="color:var(--brass);">500</span></div>
+    <p>© 2026 INA.CC ／ All rights reserved.</p>
+    <p class="signature">このランディングページは、Claude Codeで作成しました。</p>
+  </div>
+</footer>
+
+<script>
+// Header scroll state
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) header.classList.add('scrolled');
+  else header.classList.remove('scrolled');
+});
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.12, rootMargin: '0px 0px -50px 0px'});
+reveals.forEach(el => io.observe(el));
+
+// Flow tabs
+document.querySelectorAll('.flow-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+    document.querySelectorAll('.flow-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.flow-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('flow-' + target).classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
