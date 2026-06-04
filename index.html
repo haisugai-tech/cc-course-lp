@@ -356,6 +356,31 @@ section{padding: 120px 0; position:relative;}
   font-size:14px; line-height:1.85; color:var(--ink-mute);
 }
 
+/* ============ COLUMN ============ */
+.column-card{
+  padding: 40px 44px;
+  background: var(--bg-card);
+  border:1px solid var(--line-soft);
+  border-left:3px solid var(--brass);
+  box-shadow: var(--shadow);
+}
+.column-label{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+  color:var(--brass-deep); margin-bottom:16px;
+}
+.column-title{
+  font-family:'Shippori Mincho', serif;
+  font-weight:600;
+  font-size:clamp(20px, 2.4vw, 26px);
+  line-height:1.6;
+  margin-bottom:20px;
+  color:var(--ink);
+}
+.column-card p{
+  font-size:15.5px; line-height:2; color:var(--ink-soft);
+}
+
 /* ============ FUTURE (受講後の姿) ============ */
 .future{
   background: var(--bg-deeper);
@@ -692,6 +717,7 @@ section{padding: 120px 0; position:relative;}
   .turn{padding:36px 28px;}
   .solution-card{padding:32px 24px;}
   .future-scene{padding:36px 28px;}
+  .column-card{padding:32px 26px;}
   .plan{padding:36px 28px;}
   .chapter{grid-template-columns:60px 1fr; gap:20px;}
   .flow-step{grid-template-columns:48px 1fr; gap:20px;}
@@ -782,6 +808,9 @@ section{padding: 120px 0; position:relative;}
       <p class="section-lead">
         プログラミングの専門知識は要りません。<strong>コピペとAIへの指示だけで、本格的なソフトが作れる時代が、本当に来ました。</strong>
       </p>
+      <p class="section-lead">
+        この講座で本当にお伝えしたいのは、<strong>「AIを使えば、自分の手でソフトを作れる」という力</strong>そのものです。Claude Codeを覚えれば、思いついたものは何でも作れるようになります。どうせ作るなら、自分のお金に関わるものを作ってみよう ── そう考えて選んだ題材が、米国株の自動売買です。
+      </p>
     </div>
 
     <div class="solution-grid">
@@ -847,6 +876,17 @@ section{padding: 120px 0; position:relative;}
         <div class="label no">━━ 約束しないこと</div>
         <p>儲かる保証はしません。リターンも保証しません。本講座は、Claude Codeの使い方を学ぶための教育講座です。最終的な運用判断は、すべて受講者自身の責任で行っていただきます。</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLUMN: なぜ米国株か -->
+<section style="padding:100px 0 0;">
+  <div class="narrow">
+    <div class="column-card reveal">
+      <div class="column-label">Column</div>
+      <h3 class="column-title">なぜ、日本株ではなく米国株なのか</h3>
+      <p>日本株は基本100株単位で買うため、銘柄ごとに必要な金額がバラバラになり、資金を均等に配るのが難しい。米国株なら「1万円分だけ」と金額を指定して買えるので、たとえば30銘柄に1万円ずつ、合計30万円を上限にきれいに分散できる。この「金額で均等に分けられる」仕組みが、戦略の土台になっている。</p>
     </div>
   </div>
 </section>
@@ -946,7 +986,6 @@ section{padding: 120px 0; position:relative;}
     <div class="narrow reveal" style="padding-left:0;padding-right:0;">
       <div class="section-num">06 ／ 価格</div>
       <h2 class="section-title">2つのコースから、<br />お選びいただけます。</h2>
-      <p class="section-lead">第1期は<strong>モニター価格</strong>での募集です。標準コース5名、プレミアムコース5名の限定枠。</p>
     </div>
 
     <div class="pricing-grid">
@@ -954,12 +993,11 @@ section{padding: 120px 0; position:relative;}
       <div class="plan reveal">
         <div class="plan-tag">標準コース</div>
         <div class="plan-name">Standard</div>
-        <div class="plan-sub">Self-paced ／ 5 seats</div>
+        <div class="plan-sub">Self-paced</div>
         <div class="plan-price-row">
-          <span class="plan-price">¥250,000</span>
-          <span class="plan-price-strike">¥300,000</span>
+          <span class="plan-price">¥300,000</span>
         </div>
-        <div class="plan-price-note">第1期モニター価格（税込）／ 第2期以降は通常価格</div>
+        <div class="plan-price-note">税込</div>
         <ul class="plan-features">
           <li>動画教材 全7章（画面録画＋音声ナレーション）</li>
           <li>ソフト構築用のプロンプト集（Claude Codeにコピペして使うテンプレート）</li>
@@ -973,12 +1011,11 @@ section{padding: 120px 0; position:relative;}
       <div class="plan premium reveal">
         <div class="plan-tag">プレミアムコース</div>
         <div class="plan-name">Premium</div>
-        <div class="plan-sub">With direct access ／ 5 seats</div>
+        <div class="plan-sub">With direct access</div>
         <div class="plan-price-row">
-          <span class="plan-price">¥2,000,000</span>
-          <span class="plan-price-strike">¥3,000,000</span>
+          <span class="plan-price">¥3,000,000</span>
         </div>
-        <div class="plan-price-note">第1期モニター価格（税込）／ 個別契約・銀行振込</div>
+        <div class="plan-price-note">税込・個別契約／銀行振込</div>
         <ul class="plan-features">
           <li>標準コースの全コンテンツ</li>
           <li>講師が実運用中のソフトの完成版コード（フィルター・AIニュース分析を含む全コード）</li>
@@ -993,19 +1030,9 @@ section{padding: 120px 0; position:relative;}
 
     <div class="upgrade-note reveal">
       <strong>━━ アップグレードについて</strong><br />
-      標準コース受講開始から3ヶ月以内であれば、プレミアムコースへのアップグレードが可能です（追加 ¥1,900,000、税込）。「まず標準で試してみたい」という方も、後からプレミアムへ移行できます。
+      標準コース受講開始から3ヶ月以内であれば、プレミアムコースへのアップグレードが可能です（差額分、税込）。「まず標準で試してみたい」という方も、後からプレミアムへ移行できます。
     </div>
 
-    <div class="monitor-callout reveal">
-      <h5>第1期モニター価格について</h5>
-      <p>モニター価格は、以下にご協力いただける方が対象です。</p>
-      <ul>
-        <li>受講後の感想文（A4 1ページ程度）</li>
-        <li>LP掲載用のお写真（<strong>目元のモザイクや加工は可</strong>）</li>
-        <li>プレミアムコースは、これに加えてインタビュー協力</li>
-      </ul>
-      <p>上記へのご協力が難しい場合は、通常価格（標準 ¥300,000／プレミアム ¥3,000,000）でのご案内となります。</p>
-    </div>
   </div>
 </section>
 
@@ -1037,7 +1064,7 @@ section{padding: 120px 0; position:relative;}
             <div class="step-num">02</div>
             <div>
               <h5>折り返しのご案内</h5>
-              <p>講座内容・モニター条件・お支払い方法について、メールでご案内いたします。</p>
+              <p>講座内容・お支払い方法について、メールでご案内いたします。</p>
             </div>
           </div>
           <div class="flow-step">
@@ -1071,7 +1098,7 @@ section{padding: 120px 0; position:relative;}
             <div class="step-num">02</div>
             <div>
               <h5>折り返しのご案内</h5>
-              <p>講座内容・モニター条件・お支払い方法について、メールでご案内いたします。<strong style="color:var(--accent);">ご希望があれば、事前のオンライン面談（30分）も可能です。</strong></p>
+              <p>講座内容・お支払い方法について、メールでご案内いたします。<strong style="color:var(--accent);">ご希望があれば、事前のオンライン面談（30分）も可能です。</strong></p>
             </div>
           </div>
           <div class="flow-step">
@@ -1105,7 +1132,6 @@ section{padding: 120px 0; position:relative;}
     <div class="reveal">
       <h2 class="section-title">ここまで読んでくださった<br />あなたへ。</h2>
       <p>「自分には無理」と諦めていたソフトウェア開発が、AIの進化によって、本当に手の届く場所まで来ました。プログラム未経験の僕にできたのですから、同じ憧れを持つあなたにも、絶対に作れます。</p>
-      <p>第1期モニター枠は、各コース5名ずつの限定です。</p>
       <a href="#pricing" class="cta-button">受講を検討する</a>
     </div>
   </div>
