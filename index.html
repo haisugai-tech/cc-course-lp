@@ -428,30 +428,17 @@ section{padding: 120px 0; position:relative;}
 /* ============ PRICING ============ */
 .pricing-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1fr;
+  max-width:560px;
   gap:32px;
-  margin-top:48px;
+  margin:48px auto 0;
 }
-@media(max-width:880px){.pricing-grid{grid-template-columns:1fr;}}
 .plan{
   padding: 48px 40px;
   background:var(--bg-card);
   border:1px solid var(--line-soft);
   display:flex;flex-direction:column;
   position:relative;
-}
-.plan.premium{
-  background: var(--ink);
-  color: var(--bg);
-  border-color: var(--ink);
-}
-.plan-tag{
-  position:absolute;
-  top:-12px; left:32px;
-  font-family:'JetBrains Mono', monospace;
-  font-size:11px; letter-spacing:.2em;
-  background:var(--brass); color:var(--bg);
-  padding:6px 14px;
 }
 .plan-name{
   font-family:'Shippori Mincho', serif;
@@ -465,7 +452,6 @@ section{padding: 120px 0; position:relative;}
   color:var(--ink-mute);
   margin-bottom:32px;
 }
-.plan.premium .plan-sub{color: rgba(250,248,243,.55);}
 .plan-price-row{display:flex; align-items:baseline; gap:16px; margin-bottom:8px; flex-wrap:wrap;}
 .plan-price{
   font-family:'Fraunces', serif;
@@ -474,19 +460,26 @@ section{padding: 120px 0; position:relative;}
   line-height:1;
   color:var(--accent);
 }
-.plan.premium .plan-price{color:var(--brass);}
 .plan-price-strike{
   font-family:'Fraunces', serif;
   font-size:20px;
   color:var(--ink-mute);
   text-decoration:line-through;
 }
-.plan.premium .plan-price-strike{color:rgba(250,248,243,.4);}
 .plan-price-note{
   font-size:12px; color:var(--ink-mute);
+  margin-bottom:12px;
+}
+.plan-period{
+  font-size:14px; font-weight:500;
+  color:var(--accent);
   margin-bottom:28px;
 }
-.plan.premium .plan-price-note{color:rgba(250,248,243,.55);}
+.plan-support-note{
+  font-size:12.5px; line-height:1.85;
+  color:var(--ink-mute);
+  margin-bottom:24px;
+}
 .plan-features{
   list-style:none;
   flex:1;
@@ -499,7 +492,6 @@ section{padding: 120px 0; position:relative;}
   line-height:1.7;
   border-bottom:1px solid var(--line-soft);
 }
-.plan.premium .plan-features li{border-bottom-color:rgba(250,248,243,.12);}
 .plan-features li::before{
   content:"";
   position:absolute;
@@ -517,19 +509,6 @@ section{padding: 120px 0; position:relative;}
 }
 .plan-cta.primary{background:var(--accent); color:var(--bg);}
 .plan-cta.primary:hover{background:var(--accent-deep);}
-.plan-cta.gold{background:var(--brass); color:var(--ink);}
-.plan-cta.gold:hover{background:var(--brass-deep); color:var(--bg);}
-
-.upgrade-note{
-  margin-top:32px;
-  padding: 24px 28px;
-  background: var(--bg-card);
-  border:1px dashed var(--line);
-  font-size:14px;
-  line-height:1.85;
-  color:var(--ink-soft);
-}
-.upgrade-note strong{color:var(--accent); font-weight:600;}
 
 .monitor-callout{
   margin-top:40px;
@@ -566,32 +545,6 @@ section{padding: 120px 0; position:relative;}
 }
 
 /* ============ FLOW ============ */
-.flow-tabs{
-  display:flex;
-  gap:0;
-  margin-bottom:8px;
-  border-bottom:1px solid var(--line);
-}
-.flow-tab{
-  flex:1;
-  padding: 16px 12px;
-  text-align:center;
-  font-family:'Shippori Mincho', serif;
-  font-weight:600;
-  font-size:15px;
-  color:var(--ink-mute);
-  cursor:pointer;
-  background:transparent;
-  border:none;
-  border-bottom:2px solid transparent;
-  transition: all .2s;
-}
-.flow-tab.active{
-  color:var(--accent);
-  border-bottom-color:var(--brass);
-}
-.flow-content{display:none;}
-.flow-content.active{display:block;}
 .flow-steps{
   margin-top:32px;
   display:flex;flex-direction:column;
@@ -702,6 +655,11 @@ section{padding: 120px 0; position:relative;}
   font-size:12px; color:var(--ink-mute);
   margin-bottom:6px;
 }
+.footer a{
+  color:var(--ink-mute);
+  text-decoration:underline;
+}
+.footer a:hover{color:var(--accent);}
 .footer .signature{
   margin-top:32px;
   font-family:'Shippori Mincho', serif;
@@ -985,52 +943,26 @@ section{padding: 120px 0; position:relative;}
   <div class="container">
     <div class="narrow reveal" style="padding-left:0;padding-right:0;">
       <div class="section-num">06 ／ 価格</div>
-      <h2 class="section-title">2つのコースから、<br />お選びいただけます。</h2>
+      <h2 class="section-title">受講料のご案内。</h2>
     </div>
 
     <div class="pricing-grid">
-      <!-- 標準 -->
       <div class="plan reveal">
-        <div class="plan-tag">標準コース</div>
-        <div class="plan-name">Standard</div>
+        <div class="plan-name">Claude Code講座</div>
         <div class="plan-sub">Self-paced</div>
         <div class="plan-price-row">
           <span class="plan-price">¥300,000</span>
         </div>
         <div class="plan-price-note">税込</div>
+        <p class="plan-period">視聴期間：教材アクセス権の付与日から6ヶ月間</p>
         <ul class="plan-features">
-          <li>動画教材 全7章（画面録画＋音声ナレーション）</li>
+          <li>全7章の動画教材（視聴期間6ヶ月）</li>
           <li>ソフト構築用のプロンプト集（Claude Codeにコピペして使うテンプレート）</li>
           <li>動作確認済みの完成版コード（つまずいた時のリカバリ用）</li>
-          <li>受講者専用LINEオープンチャット（受講者同士の交流場・運営継続のかぎり利用可）</li>
         </ul>
-        <a href="#flow" class="plan-cta primary">標準コースに申し込む</a>
+        <p class="plan-support-note">本講座は動画教材の提供のみで、個別の質問対応・サポートは含まれません。</p>
+        <a href="#flow" class="plan-cta primary">受講を申し込む</a>
       </div>
-
-      <!-- プレミアム -->
-      <div class="plan premium reveal">
-        <div class="plan-tag">プレミアムコース</div>
-        <div class="plan-name">Premium</div>
-        <div class="plan-sub">With direct access</div>
-        <div class="plan-price-row">
-          <span class="plan-price">¥3,000,000</span>
-        </div>
-        <div class="plan-price-note">税込・個別契約／銀行振込</div>
-        <ul class="plan-features">
-          <li>標準コースの全コンテンツ</li>
-          <li>講師が実運用中のソフトの完成版コード（フィルター・AIニュース分析を含む全コード）</li>
-          <li>AIニュース分析プロンプトの全文公開</li>
-          <li>パラメータ最適化の根拠（バックテスト結果込み）</li>
-          <li>失敗事例カタログ（採用しなかった戦略の詳細解説）</li>
-          <li>講師との1対1チャットサポート（1ヶ月）</li>
-        </ul>
-        <a href="#flow" class="plan-cta gold">プレミアムに申し込む</a>
-      </div>
-    </div>
-
-    <div class="upgrade-note reveal">
-      <strong>━━ アップグレードについて</strong><br />
-      標準コース受講開始から3ヶ月以内であれば、プレミアムコースへのアップグレードが可能です（差額分、税込）。「まず標準で試してみたい」という方も、後からプレミアムへ移行できます。
     </div>
 
   </div>
@@ -1045,75 +977,33 @@ section{padding: 120px 0; position:relative;}
     </div>
 
     <div class="reveal">
-      <div class="flow-tabs">
-        <button class="flow-tab active" data-tab="standard">標準コース</button>
-        <button class="flow-tab" data-tab="premium">プレミアムコース</button>
-      </div>
-
-      <!-- 標準フロー -->
-      <div class="flow-content active" id="flow-standard">
-        <div class="flow-steps">
-          <div class="flow-step">
-            <div class="step-num">01</div>
-            <div>
-              <h5>お問い合わせフォームから送信</h5>
-              <p>標準コースを希望される旨と、簡単な自己紹介をお送りください。</p>
-            </div>
-          </div>
-          <div class="flow-step">
-            <div class="step-num">02</div>
-            <div>
-              <h5>折り返しのご案内</h5>
-              <p>講座内容・お支払い方法について、メールでご案内いたします。</p>
-            </div>
-          </div>
-          <div class="flow-step">
-            <div class="step-num">03</div>
-            <div>
-              <h5>銀行振込でお支払い</h5>
-              <p>ご案内の口座に銀行振込をお済ませください。</p>
-            </div>
-          </div>
-          <div class="flow-step">
-            <div class="step-num">04</div>
-            <div>
-              <h5>受講開始</h5>
-              <p>動画教材へのアクセス権と、プロンプト集・完成版コードをお渡しします。</p>
-            </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-num">01</div>
+          <div>
+            <h5>お問い合わせフォームから送信</h5>
+            <p>受講を希望される旨と、簡単な自己紹介をお送りください。<br />※お申込みフォームでGoogleアカウント（Gmailアドレス）のご入力が必要です。</p>
           </div>
         </div>
-      </div>
-
-      <!-- プレミアムフロー -->
-      <div class="flow-content" id="flow-premium">
-        <div class="flow-steps">
-          <div class="flow-step">
-            <div class="step-num">01</div>
-            <div>
-              <h5>お問い合わせフォームから送信</h5>
-              <p>プレミアムコースを希望される旨と、簡単な自己紹介をお送りください。</p>
-            </div>
+        <div class="flow-step">
+          <div class="step-num">02</div>
+          <div>
+            <h5>折り返しのご案内</h5>
+            <p>講座内容・お支払い方法について、メールでご案内いたします。</p>
           </div>
-          <div class="flow-step">
-            <div class="step-num">02</div>
-            <div>
-              <h5>折り返しのご案内</h5>
-              <p>講座内容・お支払い方法について、メールでご案内いたします。<strong style="color:var(--accent);">ご希望があれば、事前のオンライン面談（30分）も可能です。</strong></p>
-            </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">03</div>
+          <div>
+            <h5>銀行振込でお支払い</h5>
+            <p>ご案内の口座に銀行振込をお済ませください。</p>
           </div>
-          <div class="flow-step">
-            <div class="step-num">03</div>
-            <div>
-              <h5>契約書取り交わし・銀行振込</h5>
-              <p>契約書を双方で取り交わした上で、銀行振込にてお支払いください。</p>
-            </div>
-          </div>
-          <div class="flow-step">
-            <div class="step-num">04</div>
-            <div>
-              <h5>受講開始</h5>
-              <p>動画教材、完成版コード、AIニュース分析プロンプト、失敗事例カタログ、すべてをお渡しします。1対1チャットサポートも開始です。</p>
-            </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num">04</div>
+          <div>
+            <h5>受講開始</h5>
+            <p>ご入金確認後、お申込み時にご指定いただいたGoogleアカウントへ、教材フォルダの閲覧権限を付与します。</p>
           </div>
         </div>
       </div>
@@ -1146,6 +1036,10 @@ section{padding: 120px 0; position:relative;}
       <p>講座内で紹介されるパラメータ、戦略、コードは、すべて教材としてのサンプルです。「最適値」や「推奨値」ではなく、教育目的の例示としてご理解ください。</p>
       <p>本講座で学んだ内容を活用した投資・運用の結果について、講師および運営は一切の責任を負いません。最終的な運用判断は、受講者ご自身の責任において行ってください。</p>
       <p>受講料の返金は原則として承っておりません。お申込み前に、本講座があなたの目的に合致するかを、お問い合わせ等でしっかりとご確認ください。</p>
+      <p>教材はGoogleドライブでの限定共有により提供します。受講にはGoogleアカウントが必要です。</p>
+      <p>動画教材の視聴期間は、アクセス権の付与日から6ヶ月間です。期間経過後は閲覧権限を削除し、視聴できなくなります。期間の延長は行っておりません。</p>
+      <p>本講座の動画教材・コード・資料の複製、再配布、第三者との共有、転売を禁止します。</p>
+      <p>共有アカウントの使用や権限の又貸しが確認された場合、受講資格を取り消し、受講料相当額を違約金として請求することがあります。</p>
     </div>
   </div>
 </section>
@@ -1155,6 +1049,7 @@ section{padding: 120px 0; position:relative;}
   <div class="container">
     <div class="footer-brand">ina<span style="color:var(--brass);">500</span></div>
     <p>© 2026 ina500 ／ All rights reserved.</p>
+    <p><a href="tokusho.html">特定商取引法に基づく表記</a></p>
     <p class="signature">このランディングページは、Claude Codeで作成しました。</p>
   </div>
 </footer>
@@ -1178,17 +1073,6 @@ const io = new IntersectionObserver((entries) => {
   });
 }, {threshold: 0.12, rootMargin: '0px 0px -50px 0px'});
 reveals.forEach(el => io.observe(el));
-
-// Flow tabs
-document.querySelectorAll('.flow-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.dataset.tab;
-    document.querySelectorAll('.flow-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.flow-content').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('flow-' + target).classList.add('active');
-  });
-});
 </script>
 
 </body>
