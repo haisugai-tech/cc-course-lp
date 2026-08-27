@@ -65,6 +65,7 @@ function rebuildForm() {
 
   form.setAllowResponseEdits(false); // 回答の編集を許可しない（同意内容の書き換え防止）
   form.setProgressBar(false);        // 1ページなので進行状況バーは不要
+  form.setAcceptingResponses(true);
 
   form.setConfirmationMessage(
     'お申込みありがとうございます。\n' +
@@ -129,7 +130,7 @@ function rebuildForm() {
       '・本講座は教育講座であり、投資助言・運用代行ではないこと\n' +
       '・投資の最終判断と結果はすべて受講者自身の責任であること'
     )
-    .setChoiceValues(['下記のすべてに同意します'])
+    .setChoiceValues(['視聴期間6ヶ月（アクセス権付与日から）・返金不可・サポートなし・複製および第三者への再配布の禁止を含む、上記のすべてに同意します'])
     .setRequired(true);
 
   // ---- 実行結果の出力 ----
